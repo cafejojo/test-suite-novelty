@@ -34,6 +34,7 @@ repositories {
 
 dependencies {
     implementation group: "io.github.microutils", name: "kotlin-logging", version: kotlinLoggingVersion
+    implementation group: "com.fasterxml.jackson.dataformat", name: "jackson-dataformat-xml", version: jacksonDataformatXmlVersion
 
     testCompile group: "org.assertj", name: "assertj-core", version: assertjVersion
     testCompile group: "org.jetbrains.spek", name: "spek-api", version: spekVersion
