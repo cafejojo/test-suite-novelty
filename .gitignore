@@ -25,6 +25,11 @@ hs_err_pid*
 
 
 
+## IntelliJ build
+out/
+
+
+
 ## Gradle
 .gradle
 build/
