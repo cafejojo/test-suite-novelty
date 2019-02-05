@@ -22,7 +22,7 @@ data class CoveredLine(val fileName: String, val line: Int)
  */
 class CoverageRunner(private val mavenProject: MavenProject) {
     /**
-     * Records the coverage of each test in the test configuration of the Maven project and outputs a
+     * Records the coverage of each test in the test configuration of the Maven project and outputs the coverage sets.
      */
     fun recordCoveragePerTest() = runMavenForAllTests(findTestMethods())
 
@@ -86,4 +86,7 @@ class CoverageRunner(private val mavenProject: MavenProject) {
     }
 }
 
+/**
+ * An exception occurring during a test coverage run.
+ */
 class CoverageRunnerException(message: String?) : RuntimeException(message)

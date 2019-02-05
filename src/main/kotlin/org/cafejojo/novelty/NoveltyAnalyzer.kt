@@ -17,15 +17,24 @@ import java.io.File
  *
  * The tests in `test.new` are compared for novelty against the tests in `test.old`.
  *
- * @property mavenProject The MavenProject instance to analyze.
+ * @property mavenProject The MavenProject instance to analyze
  */
 class NoveltyAnalyzer(private val mavenProject: MavenProject) {
     companion object : KLogging() {
+        /**
+         * Compares two sets and returns the number of new sets which are not subsets of any old set.
+         *
+         * @param oldSets the old sets
+         * @param newSets the new sets
+         */
         fun <T> getNumNovelSets(oldSets: Set<Set<T>>, newSets: Set<Set<T>>) = newSets.count { newSet ->
             oldSets.none { oldSet -> oldSet.containsAll(newSet) }
         }
     }
 
+    /**
+     * Compares the two test suites expected in the [mavenProject] on novelty.
+     */
     fun analyzeNovelty(): Int {
         assert(File(mavenProject.projectDir, "src/test.old").exists()) {
             "Missing old test suite at location 'src/test.old'"
@@ -48,6 +57,9 @@ class NoveltyAnalyzer(private val mavenProject: MavenProject) {
     }
 }
 
+/**
+ * Entry point for test suite novelty analysis.
+ */
 fun main(args: Array<String>) {
     if (args.isEmpty()) {
         println("First argument missing: location of the Java Maven project to be analyzed")
