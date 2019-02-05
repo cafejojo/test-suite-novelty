@@ -17,7 +17,7 @@ import java.io.File
  *
  * The tests in `test.new` are compared for novelty against the tests in `test.old`.
  *
- * @property mavenProject The MavenProject instance to analyze
+ * @property mavenProject the MavenProject instance to analyze
  */
 class NoveltyAnalyzer(private val mavenProject: MavenProject) {
     companion object : KLogging() {
