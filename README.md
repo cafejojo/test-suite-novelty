@@ -20,7 +20,7 @@ src/
 pom.xml
 ```
 
-With this structure, run the tool as follows:
+Run the tool with the following command
 
 ```
 ./gradlew run --args='path/to/your/project'
