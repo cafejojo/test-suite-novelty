@@ -3,6 +3,8 @@ package org.cafejojo.novelty
 import com.github.javaparser.JavaParser
 import org.apache.maven.shared.invoker.DefaultInvocationRequest
 import org.apache.maven.shared.invoker.DefaultInvoker
+import org.cafejojo.schaapi.maveninstaller.MavenInstaller
+import org.cafejojo.schaapi.models.project.JavaMavenProject
 import org.cafejojo.schaapi.models.project.MavenProject
 import org.jacoco.core.analysis.Analyzer
 import org.jacoco.core.analysis.CoverageBuilder
@@ -22,7 +24,7 @@ data class CoveredLine(val fileName: String, val line: Int)
  */
 class CoverageRunner(private val mavenProject: MavenProject) {
     /**
-     * Records the coverage of each test in the test configuration of the Maven project and outputs a
+     * Records the coverage of each test in the test configuration of the Maven project and outputs the coverage sets.
      */
     fun recordCoveragePerTest() = runMavenForAllTests(findTestMethods())
 
@@ -63,6 +65,8 @@ class CoverageRunner(private val mavenProject: MavenProject) {
         }.flatten().toSet()
 
     private fun runJacocoForSingleTest(testMethod: String) {
+        MavenInstaller().installMaven(JavaMavenProject.DEFAULT_MAVEN_HOME)
+
         val request = DefaultInvocationRequest().apply {
             baseDirectory = mavenProject.projectDir
             goals = listOf("clean", "test")
@@ -86,4 +90,7 @@ class CoverageRunner(private val mavenProject: MavenProject) {
     }
 }
 
+/**
+ * An exception occurring during a test coverage run.
+ */
 class CoverageRunnerException(message: String?) : RuntimeException(message)
