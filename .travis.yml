@@ -9,7 +9,7 @@ install:
 
 script:
     - ./gradlew detektCheck check
-    - ./gradlew jacocoRootReport
+    - ./gradlew test jacocoTestReport
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)

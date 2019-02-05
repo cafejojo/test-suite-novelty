@@ -67,6 +67,23 @@ test {
     useJUnitPlatform() {
         includeEngines "junit-jupiter", "spek"
     }
+
+    // Jacoco
+    jacoco {
+        append = true
+    }
+}
+
+jacoco {
+    toolVersion = jacocoVersion
+}
+
+jacocoTestReport {
+    reports {
+        csv.enabled = false
+        html.enabled = true
+        xml.enabled = true
+    }
 }
 
 // Detekt
