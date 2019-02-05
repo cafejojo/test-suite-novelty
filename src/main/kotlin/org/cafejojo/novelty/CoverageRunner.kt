@@ -65,7 +65,7 @@ class CoverageRunner(private val mavenProject: MavenProject) {
             }
         }.flatten().toSet()
 
-    fun runJacocoForSingleTest(testMethod: String, clean: Boolean) {
+    private fun runJacocoForSingleTest(testMethod: String, clean: Boolean) {
         MavenInstaller().installMaven(JavaMavenProject.DEFAULT_MAVEN_HOME)
 
         val request = DefaultInvocationRequest().apply {
