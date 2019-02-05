@@ -1,16 +1,30 @@
-# test-suite-novelty
+# Test Suite Novelty Analyzer
 
 [![Travis build status][travis-status]](https://travis-ci.org/cafejojo/test-suite-novelty)
 [![Schaap][schaap-status]](https://github.com/cafejojo/schaapi)
 [![Built with love][baby-dont-hurt-me]](https://github.com/cafejojo/)
 
-Tool for determining the novelty of a test suite with respect to a baseline test suite. It compares two JUnit test suites (a "new" one and a baseline) test case by test case. For each, it analyzes the set of items covered by each test in the new test suite against each baseline test. If none of the sets of items covered is a subset of a certain new test case, that test case is considered "new". The output of this tool gives the number of new test cases scaled by the total LOC count of the code base under test.
+Tool for determining the novelty of a test suite with respect to a baseline test suite. It compares two JUnit test suites (a "new" one and an "old" one) test case by test case. For each, it analyzes the set of items covered by each test in the new test suite against each old test. If none of the sets of items covered is a subset of a certain old test case, that test case is considered "new". The output of this tool gives the number of novel test cases.
 
 ## Requirements and Installation
-Schaapi requires JRE 8 and has been tested on Windows and Unix systems.
+This system requires JRE 8 and has been tested on Windows and Unix systems.
 
 ## Usage
-[TODO]
+This tool assumes the following directory structure of Maven project to be analyzed:
+
+```text
+src/
+- main/
+- test.old/
+- test.new/
+pom.xml
+```
+
+With this structure, run the tool as follows:
+
+```
+./gradlew run --args='path/to/your/project'
+```
 
 ## Changelog
 Please see [releases](../../releases) for more information on what has changed recently.
@@ -29,7 +43,7 @@ $ ./gradlew dokka
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Security
-If you discover any security-related issues, please email security@cafejojo.org instead of using the issue tracker.
+If you discover any security-related issues, please email [security@cafejojo.org](mailto:security@cafejojo.org) instead of using the issue tracker.
 
 ## License
 The MIT License (MIT). Please see the [license file](LICENSE) for more information.
