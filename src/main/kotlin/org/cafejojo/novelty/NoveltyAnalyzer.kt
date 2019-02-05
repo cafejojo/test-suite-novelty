@@ -1,6 +1,6 @@
 package org.cafejojo.novelty
 
-import mu.KotlinLogging
+import mu.KLogging
 import org.cafejojo.schaapi.models.project.JavaMavenProject
 import org.cafejojo.schaapi.models.project.MavenProject
 import java.io.File
@@ -20,13 +20,11 @@ import java.io.File
  * @property mavenProject The MavenProject instance to analyze.
  */
 class NoveltyAnalyzer(private val mavenProject: MavenProject) {
-    companion object {
+    companion object : KLogging() {
         fun <T> getNumNovelSets(oldSets: Set<Set<T>>, newSets: Set<Set<T>>) = newSets.count { newSet ->
             oldSets.none { oldSet -> oldSet.containsAll(newSet) }
         }
     }
-
-    private val logger = KotlinLogging.logger {}
 
     fun analyzeNovelty(): Int {
         assert(File(mavenProject.projectDir, "src/test.old").exists()) {
