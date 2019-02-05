@@ -43,6 +43,8 @@ class NoveltyAnalyzer(private val mavenProject: MavenProject) {
             "Missing new test suite at location 'src/test.new'"
         }
 
+        File(mavenProject.projectDir, "src/test").deleteRecursively()
+
         File(mavenProject.projectDir, "src/test.old").copyRecursively(File(mavenProject.projectDir, "src/test"))
         logger.info { "Running coverage analysis for the old tests" }
         val oldTestSuiteCoverageSets = CoverageRunner(mavenProject).recordCoveragePerTest()

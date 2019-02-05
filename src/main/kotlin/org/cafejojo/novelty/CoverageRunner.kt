@@ -42,17 +42,18 @@ class CoverageRunner(private val mavenProject: MavenProject) {
             }.flatten()
         }.flatten().toList()
 
-    private fun runMavenForAllTests(testMethodDescriptors: List<String>) = testMethodDescriptors.map {
-        runJacocoForSingleTest(it)
+    private fun runMavenForAllTests(testMethodDescriptors: List<String>) =
+        testMethodDescriptors.mapIndexed { index, method ->
+            runJacocoForSingleTest(method, index == 0)
 
-        val execFileLoader = ExecFileLoader()
-        execFileLoader.load(File(mavenProject.projectDir, "target/coverage-reports/jacoco-ut.exec"))
-        val coverageBuilder = CoverageBuilder()
-        val analyzer = Analyzer(execFileLoader.executionDataStore, coverageBuilder)
-        analyzer.analyzeAll(File(mavenProject.projectDir, "target/classes"))
+            val execFileLoader = ExecFileLoader()
+            execFileLoader.load(File(mavenProject.projectDir, "target/coverage-reports/jacoco-ut.exec"))
+            val coverageBuilder = CoverageBuilder()
+            val analyzer = Analyzer(execFileLoader.executionDataStore, coverageBuilder)
+            analyzer.analyzeAll(File(mavenProject.projectDir, "target/classes"))
 
-        getCoverageSetFromClassCoverages(coverageBuilder)
-    }.toSet()
+            getCoverageSetFromClassCoverages(coverageBuilder)
+        }.toSet()
 
     private fun getCoverageSetFromClassCoverages(coverageBuilder: CoverageBuilder) = coverageBuilder.classes
         .map { classCoverage ->
@@ -64,15 +65,15 @@ class CoverageRunner(private val mavenProject: MavenProject) {
             }
         }.flatten().toSet()
 
-    private fun runJacocoForSingleTest(testMethod: String) {
+    fun runJacocoForSingleTest(testMethod: String, clean: Boolean) {
         MavenInstaller().installMaven(JavaMavenProject.DEFAULT_MAVEN_HOME)
 
         val request = DefaultInvocationRequest().apply {
             baseDirectory = mavenProject.projectDir
-            goals = listOf("clean", "test")
+            goals = if (clean) listOf("clean", "test") else listOf("test")
             isBatchMode = true
             javaHome = File(System.getProperty("java.home"))
-            mavenOpts = "-Dtest=$testMethod"
+            mavenOpts = "-Dtest=$testMethod,$testMethod[*]"
             pomFile = mavenProject.pomFile
         }
 
