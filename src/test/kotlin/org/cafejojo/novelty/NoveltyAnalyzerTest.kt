@@ -8,10 +8,18 @@ import java.io.File
 internal class NoveltyAnalyzerTest {
     @Test
     internal fun testGetNovelSets() {
-        val oldSets = setOf(setOf(1, 2, 3), setOf(2, 3, 4))
-        val newSets = setOf(setOf(1, 2, 3, 4), setOf(1, 2), setOf(2, 3, 4), setOf(0, 5))
+        val oldSets = mapOf(
+            Pair("a", setOf(1, 2, 3)),
+            Pair("b", setOf(2, 3, 4))
+        )
+        val newSets = mapOf(
+            Pair("c", setOf(1, 2, 3, 4)),
+            Pair("d", setOf(1, 2)),
+            Pair("e", setOf(2, 3, 4)),
+            Pair("f", setOf(0, 5))
+        )
 
-        assertThat(NoveltyAnalyzer.getNumNovelSets(oldSets, newSets)).isEqualTo(2)
+        assertThat(NoveltyAnalyzer.getNovelSets(oldSets, newSets).size).isEqualTo(2)
     }
 
     @Test
@@ -21,7 +29,7 @@ internal class NoveltyAnalyzerTest {
                 JavaMavenProject(
                     File(javaClass.getResource("/novelty-project/").toURI())
                 )
-            ).analyzeNovelty()
+            ).analyzeNovelty().size
         ).isEqualTo(3)
     }
 }

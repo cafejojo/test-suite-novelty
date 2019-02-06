@@ -36,8 +36,9 @@ class CoverageRunner(private val mavenProject: MavenProject) {
                 type.methods
                     .filter { method -> method.isAnnotationPresent("Test") }
                     .map { method ->
-                        file.packageDeclaration.get().name.asString() + "." + type.name.asString() +
-                            "#" + method.name.asString()
+                        (if (file.packageDeclaration.isPresent) file.packageDeclaration.get().name.asString() + "."
+                        else "") +
+                            type.name.asString() + "#" + method.name.asString()
                     }
             }.flatten()
         }.flatten().toList()
@@ -52,8 +53,8 @@ class CoverageRunner(private val mavenProject: MavenProject) {
             val analyzer = Analyzer(execFileLoader.executionDataStore, coverageBuilder)
             analyzer.analyzeAll(File(mavenProject.projectDir, "target/classes"))
 
-            getCoverageSetFromClassCoverages(coverageBuilder)
-        }.toSet()
+            Pair(method, getCoverageSetFromClassCoverages(coverageBuilder))
+        }.toMap()
 
     private fun getCoverageSetFromClassCoverages(coverageBuilder: CoverageBuilder) = coverageBuilder.classes
         .map { classCoverage ->

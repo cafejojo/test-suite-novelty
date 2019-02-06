@@ -27,15 +27,15 @@ class NoveltyAnalyzer(private val mavenProject: MavenProject) {
          * @param oldSets the old sets
          * @param newSets the new sets
          */
-        fun <T> getNumNovelSets(oldSets: Set<Set<T>>, newSets: Set<Set<T>>) = newSets.count { newSet ->
-            oldSets.none { oldSet -> oldSet.containsAll(newSet) }
+        fun <T> getNovelSets(oldSets: Map<String, Set<T>>, newSets: Map<String, Set<T>>) = newSets.filter { newSet ->
+            oldSets.none { oldSet -> oldSet.value.containsAll(newSet.value) }
         }
     }
 
     /**
      * Compares the two test suites expected in the [mavenProject] on novelty.
      */
-    fun analyzeNovelty(): Int {
+    fun analyzeNovelty(): Map<String, Set<CoveredLine>> {
         assert(File(mavenProject.projectDir, "src/test.old").exists()) {
             "Missing old test suite at location 'src/test.old'"
         }
@@ -55,7 +55,10 @@ class NoveltyAnalyzer(private val mavenProject: MavenProject) {
         val newTestSuiteCoverageSets = CoverageRunner(mavenProject).recordCoveragePerTest()
         File(mavenProject.projectDir, "src/test").deleteRecursively()
 
-        return getNumNovelSets(oldTestSuiteCoverageSets, newTestSuiteCoverageSets)
+        logger.info { oldTestSuiteCoverageSets }
+        logger.info { newTestSuiteCoverageSets }
+
+        return getNovelSets(oldTestSuiteCoverageSets, newTestSuiteCoverageSets)
     }
 }
 
@@ -69,5 +72,6 @@ fun main(args: Array<String>) {
     }
 
     val result = NoveltyAnalyzer(JavaMavenProject(File(args[0]))).analyzeNovelty()
-    println("Novel tests: $result")
+    println("Novel tests: ${result.keys}")
+    println("Number of novel tests: ${result.size}")
 }
