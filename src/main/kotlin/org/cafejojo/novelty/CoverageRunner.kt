@@ -52,7 +52,7 @@ class CoverageRunner(private val mavenProject: MavenProject) {
             val analyzer = Analyzer(execFileLoader.executionDataStore, coverageBuilder)
             analyzer.analyzeAll(File(mavenProject.projectDir, "target/classes"))
 
-            Pair(method, getCoverageSetFromClassCoverages(coverageBuilder))
+            method to getCoverageSetFromClassCoverages(coverageBuilder)
         }.toMap()
 
     private fun getCoverageSetFromClassCoverages(coverageBuilder: CoverageBuilder) = coverageBuilder.classes

@@ -9,14 +9,14 @@ internal class NoveltyAnalyzerTest {
     @Test
     internal fun testGetNovelSets() {
         val oldSets = mapOf(
-            Pair("a", setOf(1, 2, 3)),
-            Pair("b", setOf(2, 3, 4))
+            "a" to setOf(1, 2, 3),
+            "b" to setOf(2, 3, 4)
         )
         val newSets = mapOf(
-            Pair("c", setOf(1, 2, 3, 4)),
-            Pair("d", setOf(1, 2)),
-            Pair("e", setOf(2, 3, 4)),
-            Pair("f", setOf(0, 5))
+            "c" to setOf(1, 2, 3, 4),
+            "d" to setOf(1, 2),
+            "e" to setOf(2, 3, 4),
+            "f" to setOf(0, 5)
         )
 
         assertThat(NoveltyAnalyzer.getNovelSets(oldSets, newSets).size).isEqualTo(2)
