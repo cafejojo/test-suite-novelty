@@ -36,8 +36,7 @@ class CoverageRunner(private val mavenProject: MavenProject) {
                 type.methods
                     .filter { method -> method.isAnnotationPresent("Test") }
                     .map { method ->
-                        (if (file.packageDeclaration.isPresent) file.packageDeclaration.get().name.asString() + "."
-                        else "") +
+                        file.packageDeclaration.map { it.name.asString() + "." }.orElseGet { "" } +
                             type.name.asString() + "#" + method.name.asString()
                     }
             }.flatten()
