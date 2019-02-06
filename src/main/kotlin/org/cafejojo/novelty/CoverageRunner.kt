@@ -43,8 +43,8 @@ class CoverageRunner(private val mavenProject: MavenProject) {
         }.flatten().toList()
 
     private fun runMavenForAllTests(testMethodDescriptors: List<String>) =
-        testMethodDescriptors.mapIndexed { index, method ->
-            runJacocoForSingleTest(method, index == 0)
+        testMethodDescriptors.map { method ->
+            runJacocoForSingleTest(method)
 
             val execFileLoader = ExecFileLoader()
             execFileLoader.load(File(mavenProject.projectDir, "target/coverage-reports/jacoco-ut.exec"))
@@ -65,12 +65,12 @@ class CoverageRunner(private val mavenProject: MavenProject) {
             }
         }.flatten().toSet()
 
-    private fun runJacocoForSingleTest(testMethod: String, clean: Boolean) {
+    private fun runJacocoForSingleTest(testMethod: String) {
         MavenInstaller().installMaven(JavaMavenProject.DEFAULT_MAVEN_HOME)
 
         val request = DefaultInvocationRequest().apply {
             baseDirectory = mavenProject.projectDir
-            goals = if (clean) listOf("clean", "test") else listOf("test")
+            goals = listOf("clean", "test")
             isBatchMode = true
             javaHome = File(System.getProperty("java.home"))
             mavenOpts = "-Dtest=$testMethod,$testMethod[*]"
