@@ -17,9 +17,30 @@ internal class CoverageRunnerTest {
         val coverageSets = coverageRunner.recordCoveragePerTest()
 
         assertThat(coverageSets).hasSize(2)
-        assertThat(coverageSets).allMatch { it.size == 2 }
-        assertThat(coverageSets).anySatisfy { it.contains(CoveredLine("org/cafejojo/schaapi/test/MyClass.java", 5)) }
-        assertThat(coverageSets).anySatisfy { it.contains(CoveredLine("org/cafejojo/schaapi/test/MyClass.java", 9)) }
-        assertThat(coverageSets).allSatisfy { it.contains(CoveredLine("org/cafejojo/schaapi/test/MyClass.java", 3)) }
+        assertThat(coverageSets.values).allMatch { it.size == 2 }
+        assertThat(coverageSets.values).anySatisfy {
+            it.contains(
+                CoveredLine(
+                    "org/cafejojo/schaapi/test/MyClass.java",
+                    5
+                )
+            )
+        }
+        assertThat(coverageSets.values).anySatisfy {
+            it.contains(
+                CoveredLine(
+                    "org/cafejojo/schaapi/test/MyClass.java",
+                    9
+                )
+            )
+        }
+        assertThat(coverageSets.values).allSatisfy {
+            it.contains(
+                CoveredLine(
+                    "org/cafejojo/schaapi/test/MyClass.java",
+                    3
+                )
+            )
+        }
     }
 }
