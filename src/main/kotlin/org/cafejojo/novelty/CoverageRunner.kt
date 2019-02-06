@@ -42,17 +42,18 @@ class CoverageRunner(private val mavenProject: MavenProject) {
             }.flatten()
         }.flatten().toList()
 
-    private fun runMavenForAllTests(testMethodDescriptors: List<String>) = testMethodDescriptors.map {
-        runJacocoForSingleTest(it)
+    private fun runMavenForAllTests(testMethodDescriptors: List<String>) =
+        testMethodDescriptors.map { method ->
+            runJacocoForSingleTest(method)
 
-        val execFileLoader = ExecFileLoader()
-        execFileLoader.load(File(mavenProject.projectDir, "target/coverage-reports/jacoco-ut.exec"))
-        val coverageBuilder = CoverageBuilder()
-        val analyzer = Analyzer(execFileLoader.executionDataStore, coverageBuilder)
-        analyzer.analyzeAll(File(mavenProject.projectDir, "target/classes"))
+            val execFileLoader = ExecFileLoader()
+            execFileLoader.load(File(mavenProject.projectDir, "target/coverage-reports/jacoco-ut.exec"))
+            val coverageBuilder = CoverageBuilder()
+            val analyzer = Analyzer(execFileLoader.executionDataStore, coverageBuilder)
+            analyzer.analyzeAll(File(mavenProject.projectDir, "target/classes"))
 
-        getCoverageSetFromClassCoverages(coverageBuilder)
-    }.toSet()
+            getCoverageSetFromClassCoverages(coverageBuilder)
+        }.toSet()
 
     private fun getCoverageSetFromClassCoverages(coverageBuilder: CoverageBuilder) = coverageBuilder.classes
         .map { classCoverage ->
@@ -72,7 +73,7 @@ class CoverageRunner(private val mavenProject: MavenProject) {
             goals = listOf("clean", "test")
             isBatchMode = true
             javaHome = File(System.getProperty("java.home"))
-            mavenOpts = "-Dtest=$testMethod"
+            mavenOpts = "-Dtest=$testMethod,$testMethod[*]"
             pomFile = mavenProject.pomFile
         }
 
