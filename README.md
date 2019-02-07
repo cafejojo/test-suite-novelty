@@ -20,7 +20,63 @@ src/
 pom.xml
 ```
 
-Run the tool with the following command
+The `pom.xml` needs to have _at least_ the following configurations:
+
+```xml
+<build>
+    <!-- Only include this section if you need to have other directories on the classpath during build time. -->
+    <resources>
+        <resource>
+            <directory>{path to your any other directory you want to have on the build classpath}</directory>
+        </resource>
+    </resources>
+
+    <plugins>
+        <!-- Test runner plugin -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M1</version>
+            <configuration>
+                <argLine>${surefireArgLine}</argLine>
+                <reuseForks>true</reuseForks>
+            </configuration>
+        </plugin>
+
+        <!-- Coverage report plugin -->
+        <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.2</version>
+            <executions>
+                <execution>
+                    <id>pre-unit-test</id>
+                    <goals>
+                        <goal>prepare-agent</goal>
+                    </goals>
+                    <configuration>
+                        <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
+                        <propertyName>surefireArgLine</propertyName>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>post-unit-test</id>
+                    <phase>test</phase>
+                    <goals>
+                        <goal>report</goal>
+                    </goals>
+                    <configuration>
+                        <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
+                        <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
+```
+
+Run the tool with the following command:
 
 ```
 ./gradlew run --args='path/to/your/project'
